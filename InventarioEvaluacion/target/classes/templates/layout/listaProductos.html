@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Listado Clientes</title>
+    </head>
+    <body>
+        <section th:fragment="listaProductos" id="productos">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Lista de productos</h4>
+                            </div>
+                            <div th:if="${productos != null and !productos.empty}">
+                                <div sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
+                                    <table class="table table-striped">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Cantidad</th>
+                                                <th>Estado</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="producto : ${productos}">
+                                                <td>[[${producto.nombreProducto}]]</td>
+                                                <td>[[${producto.cantidad}]]</td>
+                                                <td th:if="${producto.getEstatus == 1}">ACTIVO</td>
+                                                <td th:if="${producto.getEstatus == 0}">INACTIVO</td>
+                                                <td>
+                                                    <a th:href="@{/editarSuma/} + ${producto.idProducto}"
+                                                       class="btn btn-success">
+                                                        <i class="fas fa-angle-double-right"></i>
+                                                        Agregar
+                                                    </a>
+
+                                                </td>
+                                                <td>
+                                                    <div th:if="${producto.getEstatus == 1}">
+                                                        <a th:href="@{/eliminar(idProducto=${producto.idProducto})}"
+                                                           class="btn btn-danger">
+                                                            <i class="fas fa-angle-double-right"></i>
+                                                            Desactivar
+                                                        </a>
+                                                    </div>
+                                                    <div th:if="${producto.getEstatus == 0}">
+                                                        <a th:href="@{/eliminar(idProducto=${producto.idProducto})}"
+                                                           class="btn btn-success">
+                                                            <i class="fas fa-angle-double-right"></i>
+                                                            Activar
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div sec:authorize="hasRole('ROLE_ALMACENISTA')">
+                                    <table class="table table-striped">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Cantidad</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="producto : ${productos}"
+                                                th:if="${producto.estatus} == 1">
+                                                <td>[[${producto.nombreProducto}]]</td>
+                                                <td>[[${producto.cantidad}]]</td>
+                                                <td>
+                                                    <a th:href="@{/editarResta/} + ${producto.idProducto}"
+                                                       class="btn btn-danger">
+                                                        <i class="fas fa-angle-double-right"></i>
+                                                        Sacar
+                                                    </a>
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="text-center p-2" th:if="${productos == null or
+                                 productos.empty}">
+                                <span>Lista vacía</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

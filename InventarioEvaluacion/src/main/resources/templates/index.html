@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Almacen</title>
+    </head>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"></header>
+        <div class="py-4 mb-4 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
+                        <a href="#" class="btn btn-primary w-100"
+                           data-bs-toggle="modal" data-bs-target="#agregarProducto">
+                            <i class="fas fa-plus"></i> Agregar Producto
+                        </a>
+                        <section th:replace="~{layout/agregarProducto :: agregarProducto}"></section>
+                    </div>
+                    <div class="col-md-3" sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
+                        <a th:href="@{/historial}" class="btn btn-secondary w-100">
+                            Historial
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <section th:replace="~{layout/listaProductos :: listaProductos}"></section>
+
+    </body>
+</html>

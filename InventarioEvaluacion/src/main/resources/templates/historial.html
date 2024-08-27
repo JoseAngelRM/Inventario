@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Historial</title>
+    </head>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"></header>
+        <div id="actions" class="py-4 mb-4 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <a th:href="@{/}" class="btn btn-ligth btn-block">
+                            <i class="fas fa-arrow-left"></i> Regresar
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Historial</h4>
+                                <select id="filter-select" class="form-select" aria-label="Default select example">
+                                    <option value="all">Tipo de proceso</option>
+                                    <option value="ENTRADA">ENTRADA</option>
+                                    <option value="SALIDA">SALIDA</option>
+                                </select>
+                            </div>
+                            <div th:if="${listHistorialForm != null and !listHistorialForm.empty}">
+                                <table id="table" class="table table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Autor</th>
+                                            <th>Producto</th>
+                                            <th>Proceso</th>
+                                            <th>Cantidad</th>
+                                            <th>Fecha</th>
+                                            <th>Hora</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="histTmp : ${listHistorialForm}">
+                                            <td>[[${histTmp.nombre}]]</td>
+                                            <td>[[${histTmp.nombreProducto}]]</td>
+                                            <td>[[${histTmp.tipoAccion}]]</td>
+                                            <td>[[${histTmp.cantidad}]]</td>
+                                            <td>[[${histTmp.fecha}]]</td>
+                                            <td>[[${histTmp.hora}]]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center p-2" th:if="${listHistorialForm == null or
+                                 listHistorialForm.empty}">
+                                <span>Lista vacía</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        document.querySelector("#filter-select").
+                addEventListener("change", filterTable);
+        function filterTable() {
+            const selectedOption = document.querySelector("#filter-select").value;
+            const tableRows = document.querySelectorAll("#table tr");
+            
+            tableRows.forEach((row, index) => {
+                
+                if (index === 0)
+                    return;
+                
+                if (row.children[2].textContent.toLowerCase() ===
+                        selectedOption.toLowerCase() || selectedOption === "all") {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+    </script>
+</html>
